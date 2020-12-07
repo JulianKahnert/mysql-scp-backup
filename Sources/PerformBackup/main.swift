@@ -32,7 +32,7 @@ do {
         print("saving backup to: \(outputUrl.path)")
 
         // create mysql backup
-        try shellOut(to: "mysqldump --host=\(env.dbHost) --user=\(env.dbUser) --password=\(env.dbPassword) --port=\(env.dbPort) \(databaseName) 2>&1 \(outputUrl.path)")
+        try shellOut(to: "mysqldump --host=\(env.dbHost) --user=\(env.dbUser) --password=\(env.dbPassword) --port=\(env.dbPort) \(databaseName) > \(outputUrl.path)")
 //        try shellOut(to: "echo 'this is a test!' > \(outputUrl.path)")
         
         // save backup in external storage
