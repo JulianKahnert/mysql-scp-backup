@@ -21,9 +21,11 @@ do {
     let tempLocationUrl = URL(fileURLWithPath: env.tempLocation, isDirectory: true)
     let dbNames = env.dbNamesJoined.split(separator: ",")
     
-    try shellOut(to: "echo \"${SSH_BASE64_PRIVATE_KEY}\" | base64 -d > ~/.ssh/id_rsa")
-    try shellOut(to: "echo \"${SSH_BASE64_PUBLIC_KEY}\" | base64 -d > ~/.ssh/id_rsa.pub")
-    try shellOut(to: "chmod -R 600 ~/.ssh/")
+    try shellOut(to: "echo \"${SSH_BASE64_PRIVATE_KEY}\" | base64 -d > /root/.ssh/id_rsa")
+    try shellOut(to: "echo \"${SSH_BASE64_PUBLIC_KEY}\" | base64 -d > /root/.ssh/id_rsa.pub")
+    try shellOut(to: "chmod -R 700 /root/.ssh/")
+    try shellOut(to: "chmod 600 /root/.ssh/id_rsa")
+    try shellOut(to: "chmod 644 /root/.ssh/id_rsa.pub")
 
     for databaseName in dbNames {
         print("Creating backup of: \(databaseName)")
@@ -33,7 +35,6 @@ do {
 
         // create mysql backup
         try shellOut(to: "mysqldump --host=\(env.dbHost) --user=\(env.dbUser) --password=\(env.dbPassword) --port=\(env.dbPort) \(databaseName) > \(outputUrl.path)")
-//        try shellOut(to: "echo 'this is a test!' > \(outputUrl.path)")
         
         // save backup in external storage
         try shellOut(to: "scp -o StrictHostKeyChecking=no \(outputUrl.path) \(env.sshStorageUrl):/\(outputFilename)")

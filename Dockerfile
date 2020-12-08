@@ -30,10 +30,14 @@ RUN cp "$(swift build --package-path /build -c release --show-bin-path)/PerformB
 # ================================
 FROM swift:5.3-focal-slim
 
+# we need to match so mysql version of the server (5.7) to avoid mysqldump problems:
+# https://webdevstudios.com/2020/11/19/mysql-database-export-errors-and-solutions/
+RUN echo "deb http://cn.archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" >> /etc/apt/sources.list
+
 # Make sure all system packages are up to date.
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && \
     apt-get -q update && apt-get -q dist-upgrade -y \
-    && apt-get install -y ssh mysql-client \
+    && apt-get install -y ssh mysql-client-5.7 \
     && rm -r /var/lib/apt/lists/*
 
 # Copy built executable and any staged resources from builder
