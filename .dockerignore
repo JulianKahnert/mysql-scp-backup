@@ -1,2 +1,5 @@
 .build/
 .swiftpm/
+create-keys.sh
+*.yaml
+

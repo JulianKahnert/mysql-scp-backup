@@ -2,6 +2,7 @@
 # Build image
 # ================================
 FROM swift:5.3-focal as build
+MAINTAINER Julian Kahnert <julian.kahnert@worldiety.de>
 
 # Set up a build area
 WORKDIR /build
@@ -45,26 +46,23 @@ COPY --from=build /staging /usr/bin/
 RUN mkdir -p /root/.ssh/ && chmod -R 600 /root/.ssh/
 
 # Set Default Environment Variables
-ENV DB_HOST=localhost
-ENV DB_PORT=3306
-ENV DB_USER=CHANGEME
-ENV DB_PASSWORD=CHANGEME
-ENV DB_NAMES='database-name-1,database-name-2'
+ENV DB_HOST=''
+ENV DB_PORT=''
+ENV DB_USER=''
+ENV DB_PASSWORD=''
+ENV DB_NAMES=''
 
 # since several databases (e.g. dev, stage, prod) might be saved at the same destination, we must specify a unique name for each database service
 ENV SERVICE_NAME=''
 
-# writable location - no trailing backslash!
-ENV TEMP_LOCATION=/tmp
+# writable location 
+ENV TEMP_LOCATION=''
 
 # Number of backups to keep, default: 0, e.g. do not delete any backup
-ENV BACKUPS_TO_KEEP=0
+ENV BACKUPS_TO_KEEP=''
 
-ENV SSH_STORAGE_URL=localhost
-ENV SSH_BASE64_PRIVATE_KEY=U0VDUkVUCg==
-ENV SSH_BASE64_PUBLIC_KEY=U0VDUkVUCg==
+ENV SSH_STORAGE_URL=''
+ENV SSH_BASE64_PRIVATE_KEY=''
+ENV SSH_BASE64_PUBLIC_KEY=''
 
-# # Copy backup script and execute
-# COPY perform-backup.sh /
-# RUN chmod +x /perform-backup.sh
 CMD PerformBackup
