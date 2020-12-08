@@ -19,10 +19,13 @@ do {
     let env = try Environment.getAndValidate()
 
     let tempLocationUrl = URL(fileURLWithPath: env.tempLocation, isDirectory: true)
+    print("Using temp location: \(tempLocationUrl.path)")
     let dbNames = env.dbNamesJoined.split(separator: ",")
+    print("Found database names: \(dbNames)")
     
-    try shellOut(to: "echo \"${SSH_BASE64_PRIVATE_KEY}\" | base64 -d > /root/.ssh/id_rsa")
-    try shellOut(to: "echo \"${SSH_BASE64_PUBLIC_KEY}\" | base64 -d > /root/.ssh/id_rsa.pub")
+    print("Saving private/public key.")
+    try shellOut(to: "echo \"\(env.sshBase64PrivateKey)\" | base64 -d > /root/.ssh/id_rsa")
+    try shellOut(to: "echo \"\(env.sshBase64PublicKey)\" | base64 -d > /root/.ssh/id_rsa.pub")
     try shellOut(to: "chmod -R 700 /root/.ssh/")
     try shellOut(to: "chmod 600 /root/.ssh/id_rsa")
     try shellOut(to: "chmod 644 /root/.ssh/id_rsa.pub")
@@ -50,10 +53,12 @@ do {
     
     let fileNamesToDelete = uniqueFilenameDates
         .dropLast(env.backupsToKeep)
-        .flatMap { filenameDate in
+        .flatMap { filenameDate -> [String.SubSequence] in
             // filenameDate, e.g. "2020-12-07_10-59-40"
+            let filenamePrefix = "\(filenameDate)\(dateSeparator)\(env.serviceName)-"
+            
             // get all filename with that prefix
-            filenames.filter { $0.hasPrefix(filenameDate) }
+            return filenames.filter { $0.hasPrefix(filenamePrefix) }
         }
         // sftp does not like "rm file1 file2" - we have to create multiple rm statements ("rm file1\nrm file2") in a batchfile
         .map { "rm \($0)\n" }
