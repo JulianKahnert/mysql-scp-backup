@@ -35,14 +35,14 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && \
     apt-get -q update && apt-get -q dist-upgrade -y && \
     apt-get install -y ssh
 
-# Latest MySQL Version
-RUN apt-get -y install mysql-client
+# # Latest MySQL Version
+# RUN apt-get -y install mysql-client
 
-# # MySQL Version 5.7
-# # we need to match so mysql version of the server (5.7) to avoid mysqldump problems:
-# # https://webdevstudios.com/2020/11/19/mysql-database-export-errors-and-solutions/
-# RUN echo "deb http://cn.archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" >> /etc/apt/sources.list
-# RUN apt-get -q update && apt-get install -y mysql-client-5.7
+# MySQL Version 5.7
+# we need to match so mysql version of the server (5.7) to avoid mysqldump problems:
+# https://webdevstudios.com/2020/11/19/mysql-database-export-errors-and-solutions/
+RUN echo "deb http://cn.archive.ubuntu.com/ubuntu/ xenial main restricted universe multiverse" >> /etc/apt/sources.list
+RUN apt-get -q update && apt-get install -y mysql-client-5.7
 
 RUN rm -r /var/lib/apt/lists/*
 
