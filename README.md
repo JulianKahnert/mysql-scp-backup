@@ -11,6 +11,14 @@ docker run --env-file ./env-file -it mysqlclient
 docker run -it worldiety/mysql-scp-backup:latest sh
 ```
 
+This Docker container is available in two versions:
+* Latest MySQL Version
+    * **latest** latest version of the
+    * Stable tag name **0.0.5**
+* MySQL Version 5.7
+    * **mysql-5.7** latest version of the 
+    * Stable tag name **0.0.5-5.7** with MySQL 5.7
+
 ## Configuration
 
 Here is a list of all configuration options (e.g. environment variables) of this container.
